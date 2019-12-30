@@ -9,6 +9,36 @@ class Matrix extends Array{
         return m
     }
 
+    static identity(n){
+        let m = Matrix.zeros([n, n])
+        for(let i = 0; i < n; i++) m[i][i] = 1
+        return m
+    }
+
+    static unit(n){
+        return Matrix.identity(n)
+    }
+
+    static empty(row_size = 0, col_size = 0){
+        return Matrix.zeros([row_size, col_size])
+    }
+
+    static row_vector(ary){
+        return Matrix.of(...[ary])
+    }
+
+    static rows(ary){
+        return Matrix.of(...ary)
+    }
+
+    static column_vector(ary){
+        return Matrix.of(...[ary]).t()
+    }
+
+    static columns(ary){
+        return Matrix.of(...ary).t()
+    }
+
     static ones(arg){
         let rowSize, colSize
         if(typeof arg == "number"){
@@ -26,6 +56,20 @@ class Matrix extends Array{
 
     static zeros(arg){
         return Matrix.ones(arg).product(0)
+    }
+
+    t(){
+        let m = Matrix.ones([this.colSize, this.rowSize])
+        for(let i = 0; i < this.rowSize; i++){
+            for(let j = 0; j < this.colSize; j++){
+                m[j][i] = this[i][j]
+            }
+        }
+        return m
+    }
+
+    transpose(){
+        return this.t()
     }
 
     product(arg){
@@ -52,10 +96,19 @@ class Matrix extends Array{
         }
         return m
     }
+
+    to_tex(){
+        let tex = "\\left(\n    \\begin{array}{ccc}\n"
+        for(let i = 0; i < this.rowSize; i++){
+            tex += "        "
+            for(let j = 0; j < this.colSize; j++){
+                tex += this[i][j] + " & "
+            }
+            tex = tex.slice(0, -2)
+            tex += "\\\\\n"
+        }
+        tex += "    \\end{array}\n\\right)"
+        return tex
+    }
 }
 
-let a = Matrix.of(...[[1, 2, 3], [4, 5, 6]])
-let b = Matrix.of(...[[1, 2], [3, 4], [5, 6]])
-console.log(a)
-console.log(b)
-console.log(a.product(b))
