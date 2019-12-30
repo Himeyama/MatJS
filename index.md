@@ -138,6 +138,17 @@ console.log(mat)
 [[22, 28], [49, 64]]
 ```
 
+## Matrix.prototype.summation()
+行列の和を計算します。
+```js
+mat1 = Matrix.rows([[1, 2, 3], [4, 5, 6]])
+mat2 = Matrix.rows([[3, 2, 1], [6, 5, 4]])
+console.log(mat1.summation(mat2))
+```
+```
+[[4, 4, 4], [10, 10, 10]]
+```
+
 ## Matrix.prototype.transpose()
 転置行列。`Matrix.prototype.t()`と同じです。
 ```js

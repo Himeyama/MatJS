@@ -97,6 +97,17 @@ class Matrix extends Array{
         return m
     }
 
+    summation(mat){
+        if(!(this.rowSize == mat.rowSize && this.colSize == mat.colSize)) throw new RangeError("")
+        let m = Matrix.ones([this.rowSize, this.colSize])
+        for(let i = 0; i < this.rowSize; i++){
+            for(let j = 0; j < this.colSize; j++){
+                m[i][j] = this[i][j] + mat[i][j]
+            }
+        }
+        return m
+    }
+
     to_tex(){
         let tex = "\\left(\n    \\begin{array}{ccc}\n"
         for(let i = 0; i < this.rowSize; i++){
