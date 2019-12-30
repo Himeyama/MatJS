@@ -159,9 +159,9 @@ console.log(mat.transpose())
 [[1, 4], [2, 5], [3, 6]]
 ```
 
-## Matrix.prototype.inverse()
+<!-- ## Matrix.prototype.inverse()
 逆行列を計算します。`Matrix.prototype.inv()`と同じです。
 ```js
 mat = Matrix.rows([[6, 4], [3, 2]])
 console.log(mat.inverse())
-```
+``` -->
