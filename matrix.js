@@ -123,12 +123,9 @@ class Matrix extends Array{
     }
 
     inverse(){
-        return Matrix.identity(this.rowSize).inverse_from(this)
-    }
-
-    inverse_from(src){
-        let last = this.rowSize - 1
-        let a = Matrix.of(...src)
+        let identity = Matrix.identity(this.rowSize)
+        let last = identity.rowSize - 1
+        let a = Matrix.of(...this)
         for(let k = 0; k <= last; k++){
             let i = k
             let akk = Math.abs(a[k][k])
@@ -142,7 +139,7 @@ class Matrix extends Array{
             if(akk == 0) throw new RangeError()
             if(i != k){
                 [a[i], a[k]] = [a[k], a[i]]
-                [this[i], this[k]] = [this[k], this[i]]
+                [identity[i], identity[k]] = [identity[k], identity[i]]
             }
             akk = a[k][k]
             for(let ii = 0; ii <= last; ii++){
@@ -150,21 +147,19 @@ class Matrix extends Array{
                 let q = a[ii][k] / akk
                 a[ii][k] = 0
                 for(let j = k + 1; j <= last; j++){
-                    a[ii][j] -= this[k][j] * q
+                    a[ii][j] -= identity[k][j] * q
                 }
                 for(let j = 0; j <= last; j++){
-                    this[ii][j] -= this[k][j] * q
+                    identity[ii][j] -= identity[k][j] * q
                 }
             }
             for(let j = k + 1; j <= last; j++){
                 a[k][j] = a[k][j] / akk
             }
             for(let j = 0; j <= last; j++){
-                this[k][j] = this[k][j] / akk
+                identity[k][j] = identity[k][j] / akk
             }
         }
-        return this
+        return identity
     }
 }
-
-
