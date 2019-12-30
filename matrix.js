@@ -108,9 +108,6 @@ class Matrix extends Array{
         return m
     }
 
-    inverse(){
-    }
-
     to_tex(){
         let tex = "\\left(\n    \\begin{array}{ccc}\n"
         for(let i = 0; i < this.rowSize; i++){
@@ -124,5 +121,50 @@ class Matrix extends Array{
         tex += "    \\end{array}\n\\right)"
         return tex
     }
+
+    inverse(){
+        return Matrix.identity(this.rowSize).inverse_from(this)
+    }
+
+    inverse_from(src){
+        let last = this.rowSize - 1
+        let a = Matrix.of(...src)
+        for(let k = 0; k <= last; k++){
+            let i = k
+            let akk = Math.abs(a[k][k])
+            for(let j = k + 1; j <= last; j++){
+                let v = Math.abs(a[j][k])
+                if(v > akk){
+                    i = j
+                    akk = v
+                }
+            }
+            if(akk == 0) throw new RangeError()
+            if(i != k){
+                [a[i], a[k]] = [a[k], a[i]]
+                [this[i], this[k]] = [this[k], this[i]]
+            }
+            akk = a[k][k]
+            for(let ii = 0; ii <= last; ii++){
+                if(ii == k) continue
+                let q = a[ii][k] / akk
+                a[ii][k] = 0
+                for(let j = k + 1; j <= last; j++){
+                    a[ii][j] -= this[k][j] * q
+                }
+                for(let j = 0; j <= last; j++){
+                    this[ii][j] -= this[k][j] * q
+                }
+            }
+            for(let j = k + 1; j <= last; j++){
+                a[k][j] = a[k][j] / akk
+            }
+            for(let j = 0; j <= last; j++){
+                this[k][j] = this[k][j] / akk
+            }
+        }
+        return this
+    }
 }
+
 
