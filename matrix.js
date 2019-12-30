@@ -108,6 +108,9 @@ class Matrix extends Array{
         return m
     }
 
+    inverse(){
+    }
+
     to_tex(){
         let tex = "\\left(\n    \\begin{array}{ccc}\n"
         for(let i = 0; i < this.rowSize; i++){
