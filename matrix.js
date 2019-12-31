@@ -1,14 +1,4 @@
 class Matrix extends Array{
-    rowSize
-    colSize
-
-    static of(...arg){
-        let m = super.of(...arg)
-        m.rowSize = m.length
-        m.colSize = m[0].length
-        return m
-    }
-
     static identity(n){
         let m = Matrix.zeros([n, n])
         for(let i = 0; i < n; i++) m[i][i] = 1
@@ -40,17 +30,15 @@ class Matrix extends Array{
     }
 
     static ones(arg){
-        let rowSize, colSize
+        let r, c
         if(typeof arg == "number"){
-            rowSize = arg
-            colSize = 1
+            r = arg
+            c = 1
         }else if(typeof arg == "object"){
-            rowSize = arg[0]
-            colSize = arg[1]
+            r = arg[0]
+            c = arg[1]
         }
-        let m = (new Matrix(rowSize)).fill().map(x => (new Matrix(colSize)).fill(1))
-        m.rowSize = rowSize
-        m.colSize = colSize
+        let m = (new Matrix(r)).fill().map(x => (new Matrix(c)).fill(1))
         return m
     }
 
@@ -58,10 +46,18 @@ class Matrix extends Array{
         return Matrix.ones(arg).product(0)
     }
 
+    row_size(){
+        return this.length
+    }
+
+    column_size(){
+        return this[0].length
+    }
+
     t(){
-        let m = Matrix.ones([this.colSize, this.rowSize])
-        for(let i = 0; i < this.rowSize; i++){
-            for(let j = 0; j < this.colSize; j++){
+        let m = Matrix.ones([this.column_size(), this.row_size()])
+        for(let i = 0; i < this.row_size(); i++){
+            for(let j = 0; j < this.column_size(); j++){
                 m[j][i] = this[i][j]
             }
         }
@@ -75,19 +71,19 @@ class Matrix extends Array{
     product(arg){
         let m
         if(typeof arg == "number"){
-            m = Matrix.ones([this.rowSize, this.colSize])
-            for(let i = 0; i < this.rowSize; i++){
-                for(let j = 0; j < this.colSize; j++){
+            m = Matrix.ones([this.row_size(), this.column_size()])
+            for(let i = 0; i < this.row_size(); i++){
+                for(let j = 0; j < this.column_size(); j++){
                     m[i][j] = this[i][j] * arg
                 }
             }
         }else if(typeof arg == "object"){
-            if(this.colSize != arg.rowSize) throw new RangeError("不適切な行列サイズ")
-            m = Matrix.ones([this.rowSize, arg.colSize])
-            for(let i = 0; i < this.rowSize; i++){
-                for(let j = 0; j < this.colSize; j++){
+            if(this.column_size() != arg.row_size()) throw new RangeError("不適切な行列サイズ")
+            m = Matrix.ones([this.row_size(), arg.column_size()])
+            for(let i = 0; i < this.row_size(); i++){
+                for(let j = 0; j < this.column_size(); j++){
                     let s = 0
-                    for(let k = 0; k < this.colSize; k++){
+                    for(let k = 0; k < this.column_size(); k++){
                         s += this[i][k] * arg[k][j]
                     }
                     if(s) m[i][j] = s
@@ -98,10 +94,10 @@ class Matrix extends Array{
     }
 
     summation(mat){
-        if(!(this.rowSize == mat.rowSize && this.colSize == mat.colSize)) throw new RangeError("")
-        let m = Matrix.ones([this.rowSize, this.colSize])
-        for(let i = 0; i < this.rowSize; i++){
-            for(let j = 0; j < this.colSize; j++){
+        if(!(this.row_size() == mat.row_size() && this.column_size() == mat.column_size())) throw new RangeError("")
+        let m = Matrix.ones([this.row_size(), this.column_size()])
+        for(let i = 0; i < this.row_size(); i++){
+            for(let j = 0; j < this.column_size(); j++){
                 m[i][j] = this[i][j] + mat[i][j]
             }
         }
@@ -110,9 +106,9 @@ class Matrix extends Array{
 
     to_tex(){
         let tex = "\\left(\n    \\begin{array}{ccc}\n"
-        for(let i = 0; i < this.rowSize; i++){
+        for(let i = 0; i < this.row_size(); i++){
             tex += "        "
-            for(let j = 0; j < this.colSize; j++){
+            for(let j = 0; j < this.column_size(); j++){
                 tex += this[i][j] + " & "
             }
             tex = tex.slice(0, -2)
@@ -122,44 +118,52 @@ class Matrix extends Array{
         return tex
     }
 
-    inverse(){
-        let identity = Matrix.identity(this.rowSize)
-        let last = identity.rowSize - 1
-        let a = Matrix.of(...this)
-        for(let k = 0; k <= last; k++){
-            let i = k
-            let akk = Math.abs(a[k][k])
-            for(let j = k + 1; j <= last; j++){
-                let v = Math.abs(a[j][k])
-                if(v > akk){
-                    i = j
-                    akk = v
-                }
-            }
-            if(akk == 0) throw new RangeError()
-            if(i != k){
-                [a[i], a[k]] = [a[k], a[i]]
-                [identity[i], identity[k]] = [identity[k], identity[i]]
-            }
-            akk = a[k][k]
-            for(let ii = 0; ii <= last; ii++){
-                if(ii == k) continue
-                let q = a[ii][k] / akk
-                a[ii][k] = 0
-                for(let j = k + 1; j <= last; j++){
-                    a[ii][j] -= identity[k][j] * q
-                }
-                for(let j = 0; j <= last; j++){
-                    identity[ii][j] -= identity[k][j] * q
-                }
-            }
-            for(let j = k + 1; j <= last; j++){
-                a[k][j] = a[k][j] / akk
-            }
-            for(let j = 0; j <= last; j++){
-                identity[k][j] = identity[k][j] / akk
-            }
+    forward_gaussian_elim(vec = null, lmat = null){
+        let t = 0
+        let a = Matrix.from(this)
+        let b = null
+        let l = null
+        let tmp
+        if(vec){
+            b = Matrix.from(vec)
         }
-        return identity
+        if(lmat){
+            l = Matrix.from(lmat)
+        }
+        console.log(a, b, l)
+        
+        // while(t < a.row_size()){
+        //     if(a[t][t] == 0 && t < a.row_size() - 1){
+        //         tmp = a[t]
+        //         a[t] = a[t + 1]
+        //         a[t + 1] = tmp
+        //         if(b){
+        //             tmp = b[t]
+        //             b[t] = b[t + 1]
+        //             b[t + 1] = tmp
+        //         }
+        //     }
+        //     if(a[t][t] != 0){
+        //         let x = 1.0 / a[t][t]
+        //         a[t] = a[t] * x
+        //         if(b) b[t] = b[t] * x
+        //         let s = t + 1
+        //         if(t < a.row_size()){
+        //             while(s < a.row_size()){
+        //                 x = -a[s][t]
+        //                 if(l) l[t][s] = -x
+        //                 a[s] = a[s] + a[t] * x
+        //                 if(b) b[s] = b[s] + b[t] * x
+        //                 s++
+        //             }
+        //         }
+        //     }
+        //     t++
+        // }
+        return [a, l]
     }
 }
+
+let u = Matrix.rows([[1, 1, 1], [2, 3, 4], [2, 1, 1]])
+let l = Matrix.identity(3)
+console.log(u.forward_gaussian_elim(null, l))

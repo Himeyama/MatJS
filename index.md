@@ -21,28 +21,6 @@ MathJax.Hub.Config({
 # ダウンロード
 - [最新版 - matrix.js](matrix.js)
 
-# プロパティ
-
-## Matrix.rowSize
-行数
-```js
-mat = Matrix.rows([[1, 2, 3], [4, 5, 6]])
-console.log(mat.rowSize)
-```
-```
-2
-```
-
-## Matrix.colSize
-列数
-```js
-mat = Matrix.rows([[1, 2, 3], [4, 5, 6]])
-console.log(mat.colSize)
-```
-```
-3
-```
-
 # メソッド
 説明ではわかりやすくするために、オブジェクトを数式で表しています。
 
@@ -125,6 +103,12 @@ console.log(mat)
 []
 ```
 
+## Matrix.prototype.row_size()
+行列の行数を取得します。
+
+## Matrix.prototype.column_size()
+行列の列数を取得します。
+
 ## Matrix.prototype.product()
 行列の積を計算します。
 ```js
@@ -162,6 +146,12 @@ console.log(mat.transpose())
 <!-- ## Matrix.prototype.inverse()
 逆行列を計算します。`Matrix.prototype.inv()`と同じです。
 ```js
-mat = Matrix.rows([[6, 4], [3, 2]])
+mat = Matrix.rows([[2, 1, 0], [1, -1, 2], [-1, 0, -1]])
 console.log(mat.inverse())
 ``` -->
+
+```js
+u = Matrix.rows([[1,1,1],[2,3,4],[2,1,1]])
+l = Matrix.identity(3)
+console.log(u.forward_gaussian_elim(null, l))
+```
