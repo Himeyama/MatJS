@@ -118,52 +118,48 @@ class Matrix extends Array{
         return tex
     }
 
-    forward_gaussian_elim(vec = null, lmat = null){
-        let t = 0
-        let a = Matrix.from(this)
-        let b = null
-        let l = null
-        let tmp
-        if(vec){
-            b = Matrix.from(vec)
+    inverse(){
+        let a = Matrix.zeros([this.row_size(), this.column_size()])
+        for(let i = 0; i < this.row_size(); i++){
+            for(let j = 0; j < this.column_size(); j++){
+                a[i][j] = this[i][j]
+            }
         }
-        if(lmat){
-            l = Matrix.from(lmat)
+        let e = Matrix.identity(a.row_size())
+        let k, l
+
+        for(let m = 0; m < a.row_size(); m++){
+            k = a[m][m]
+            for(let i = 0; i < a.column_size(); i++){
+                a[m][i] /= k
+                e[m][i] /= k
+            }
+            for(let i = m + 1; i < a.row_size(); i++){
+                l = a[i][m]
+                for(let j = 0; j < a.column_size(); j++){
+                    a[i][j] = -l * a[m][j] + a[i][j] 
+                    e[i][j] = -l * e[m][j] + e[i][j]
+                }
+            }
         }
-        console.log(a, b, l)
-        
-        // while(t < a.row_size()){
-        //     if(a[t][t] == 0 && t < a.row_size() - 1){
-        //         tmp = a[t]
-        //         a[t] = a[t + 1]
-        //         a[t + 1] = tmp
-        //         if(b){
-        //             tmp = b[t]
-        //             b[t] = b[t + 1]
-        //             b[t + 1] = tmp
-        //         }
-        //     }
-        //     if(a[t][t] != 0){
-        //         let x = 1.0 / a[t][t]
-        //         a[t] = a[t] * x
-        //         if(b) b[t] = b[t] * x
-        //         let s = t + 1
-        //         if(t < a.row_size()){
-        //             while(s < a.row_size()){
-        //                 x = -a[s][t]
-        //                 if(l) l[t][s] = -x
-        //                 a[s] = a[s] + a[t] * x
-        //                 if(b) b[s] = b[s] + b[t] * x
-        //                 s++
-        //             }
-        //         }
-        //     }
-        //     t++
-        // }
-        return [a, l]
+
+        for(let m = a.row_size(); m > 0; m--){
+            for(let n = a.row_size() - 1; n >= m; n--){
+                k = a[m - 1][n]
+                for(let j = 0; j < a.column_size(); j++){
+                    a[m - 1][j] = -k * a[n][j] + a[m - 1][j]
+                    e[m - 1][j] = -k * e[n][j] + e[m - 1][j]
+                }
+            }
+        }
+        return e
+    }
+
+    inv(){
+        return this.inverse()
     }
 }
 
-let u = Matrix.rows([[1, 1, 1], [2, 3, 4], [2, 1, 1]])
-let l = Matrix.identity(3)
-console.log(u.forward_gaussian_elim(null, l))
+let u = Matrix.rows([[2, 3, 4, 1], [1, 1, 1, 1], [2, 1, 1, 1], [1, 1, 1, 2]])
+
+console.log(u.inv())
