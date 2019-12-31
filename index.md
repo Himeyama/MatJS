@@ -145,6 +145,7 @@ console.log(mat.transpose)
 
 ## Matrix.prototype.inverse
 逆行列を計算します。`Matrix.prototype.inv`と同じです。
+(issue: 丸め誤差)
 ```js
 mat = Matrix.rows([[2, 1, 0], [1, -1, 2], [-1, 0, -1]])
 console.log(mat.inverse)
