@@ -103,10 +103,10 @@ console.log(mat)
 []
 ```
 
-## Matrix.prototype.row_size()
+## Matrix.prototype.row_size
 行列の行数を取得します。
 
-## Matrix.prototype.column_size()
+## Matrix.prototype.column_size
 行列の列数を取得します。
 
 ## Matrix.prototype.product()
@@ -133,21 +133,21 @@ console.log(mat1.summation(mat2))
 [[4, 4, 4], [10, 10, 10]]
 ```
 
-## Matrix.prototype.transpose()
-転置行列。`Matrix.prototype.t()`と同じです。
+## Matrix.prototype.transpose
+転置行列。`Matrix.prototype.t`と同じです。
 ```js
 mat = Matrix.rows([[1, 2, 3], [4, 5, 6]])
-console.log(mat.transpose())
+console.log(mat.transpose)
 ```
 ```
 [[1, 4], [2, 5], [3, 6]]
 ```
 
-## Matrix.prototype.inverse()
-逆行列を計算します。`Matrix.prototype.inv()`と同じです。
+## Matrix.prototype.inverse
+逆行列を計算します。`Matrix.prototype.inv`と同じです。
 ```js
 mat = Matrix.rows([[2, 1, 0], [1, -1, 2], [-1, 0, -1]])
-console.log(mat.inverse())
+console.log(mat.inverse)
 ```
 ```
 [[1, 0.9999999999999998, 1.9999999999999996], [-1, -1.9999999999999996, -3.999999999999999], [-1, -0.9999999999999999, -2.9999999999999996]]
