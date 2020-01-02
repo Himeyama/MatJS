@@ -109,12 +109,12 @@ console.log(mat)
 ## column_size
 行列の列数を取得します。
 
-## product()
+## mul()
 行列の積を計算します。
 ```js
 mat = Matrix.rows([[1, 2, 3], [4, 5, 6]])
-console.log(mat.product(2))
-mat = Matrix.rows([[1, 2, 3], [4, 5, 6]]).product(Matrix.rows([[1, 2], [3, 4], [5, 6]]))
+console.log(mat.mul(2))
+mat = Matrix.rows([[1, 2, 3], [4, 5, 6]]).mul(Matrix.rows([[1, 2], [3, 4], [5, 6]]))
 console.log(mat)
 ```
 ```
@@ -122,12 +122,12 @@ console.log(mat)
 [[22, 28], [49, 64]]
 ```
 
-## summation()
+## add()
 行列の和を計算します。
 ```js
 mat1 = Matrix.rows([[1, 2, 3], [4, 5, 6]])
 mat2 = Matrix.rows([[3, 2, 1], [6, 5, 4]])
-console.log(mat1.summation(mat2))
+console.log(mat1.add(mat2))
 ```
 ```
 [[4, 4, 4], [10, 10, 10]]

@@ -49,7 +49,7 @@ class Matrix extends Array{
     }
 
     static zeros(arg){
-        return Matrix.ones(arg).product(0)
+        return Matrix.ones(arg).mul(0)
     }
 
     get row_size(){
@@ -74,7 +74,7 @@ class Matrix extends Array{
         return this.t
     }
 
-    product(arg){
+    mul(arg){
         let m
         if(typeof arg == "number"){
             m = Matrix.ones([this.row_size, this.column_size])
@@ -99,7 +99,7 @@ class Matrix extends Array{
         return m
     }
 
-    summation(mat){
+    add(mat){
         if(!(this.row_size == mat.row_size && this.column_size == mat.column_size)) throw new RangeError("")
         let m = Matrix.ones([this.row_size, this.column_size])
         for(let i = 0; i < this.row_size; i++){
@@ -180,6 +180,10 @@ class Rational{
     constructor(numerator = 0, denominator = 1){
         this.numerator = numerator
         this.denominator = denominator
+        if(denominator < 0){
+            this.numerator *= -1
+            this.denominator *= -1
+        }
     }
 
     plus(n){
